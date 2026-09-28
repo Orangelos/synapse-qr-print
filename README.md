@@ -1,0 +1,1 @@
+"synapse module: prints messages as QR codes"

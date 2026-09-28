@@ -1,0 +1,10 @@
+README.md
+pyproject.toml
+synapse_qr_print/__init__.py
+synapse_qr_print/qr.py
+synapse_qr_print.egg-info/PKG-INFO
+synapse_qr_print.egg-info/SOURCES.txt
+synapse_qr_print.egg-info/dependency_links.txt
+synapse_qr_print.egg-info/requires.txt
+synapse_qr_print.egg-info/top_level.txt
+tests/test_qr.py
