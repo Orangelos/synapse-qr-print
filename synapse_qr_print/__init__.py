@@ -12,10 +12,22 @@ class QrPrintModule:
         self.config=config
         self.api=api
         api.register_third_party_rules_callbacks(on_new_event=self.new_event)
+
     @staticmethod
     def parse_config(config):
         return config
     
     async def new_event(self, event, state_events):
-        logger.info("Событие: %s от %s", event.type, event.sender)
+        if event.type == "m.room.message":
+            if event.sender != self.config["target_user"]:
+                if event.content.get("body")!="":
+                    member=state_events.get(("m.room.member",self.config["target_user"]))
+                    if member is None or member.content.get("membership")!="join":
+                        return
+                    logger.info("Событие: %s от %s", event.type, event.sender)
+            elif event.type == "m.room.encrypted":
+                logger.info("Сообщение зашифровано от %s", event.sender)
+        
+                    
+
 
