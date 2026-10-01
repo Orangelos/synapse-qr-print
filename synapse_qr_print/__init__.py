@@ -2,9 +2,10 @@ import logging
 from dataclasses import dataclass 
 from typing import Any, Dict
 from synapse.module_api import ModuleApi
-
 from .qr import render
 from .printing import print_png
+from twisted.internet.threads import deferToThread
+from synapse.logging.context import make_deferred_yieldable
 logger=logging.getLogger(__name__)
 
 class QrPrintModule:
@@ -25,6 +26,11 @@ class QrPrintModule:
                     if member is None or member.content.get("membership")!="join":
                         return
                     logger.info("Событие: %s от %s", event.type, event.sender)
+                    png = render(f'От {event.sender} Сообщение: {event.content.get("body")}')
+                    try:
+                        await make_deferred_yieldable(deferToThread(print_png, png, self.config["printer_name"]))
+                    except Exception as e:
+                        logger.exception(e)
             elif event.type == "m.room.encrypted":
                 logger.info("Сообщение зашифровано от %s", event.sender)
         
